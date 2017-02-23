@@ -15,7 +15,7 @@
 		"url": "https://github.com/zucska/extract-component"
 	},
     "activationEvents": [
-        "onCommand:extension.extractComponent"
+        "*"
     ],
     "main": "./extension",
     "contributes": {
