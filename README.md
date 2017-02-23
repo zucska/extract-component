@@ -2,4 +2,4 @@
 
 Extract component to new file
 
-![](https://github.com/zucska/extract-component/extract-component.gif)
+![](https://github.com/zucska/extract-component/blob/master/extract-component.gif)
