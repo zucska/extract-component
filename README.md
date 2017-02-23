@@ -2,9 +2,4 @@
 
 Extract component to new file
 
-
-
-## todo
-- check props regex
-- add const {a,b} = this.props
-- replace vars
+![](https://github.com/zucska/extract-component/extract-component.gif)
