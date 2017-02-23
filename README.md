@@ -1,4 +1,4 @@
-# React Extract component
+# VSCode > Extract react component
 
 Extract component to new file
 
