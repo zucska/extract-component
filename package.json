@@ -11,11 +11,12 @@
         "Other"
     ],
     "repository": {
-		"type": "git",
-		"url": "https://github.com/zucska/extract-component"
-	},
+        "type": "git",
+        "url": "https://github.com/zucska/extract-component"
+    },
+    "homepage": "https://github.com/zucska/extract-component",
     "activationEvents": [
-        "onCommand:extension.extractComponent"
+        "*"
     ],
     "main": "./extension",
     "contributes": {
@@ -30,7 +31,6 @@
                 {
                     "when": "resourceLangId == javascript",
                     "command": "extension.extractComponent",
-                    "alt": "extension.extractComponent",
                     "group": "navigation"
                 }
             ]

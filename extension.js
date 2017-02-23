@@ -43,7 +43,9 @@ function activate(context) {
                     return
                 }
                 actEdit.edit(function (edit) {
-                    edit.replace(selection, '<' + capitalizeFirstLetter(e) + ' />\n\n {/*' + text + '*/}')
+                    edit.replace(selection, '<' + capitalizeFirstLetter(e) + ' />')
+                    // edit.replace(selection, '<' + capitalizeFirstLetter(e) + ' />\n\n {/*' + text + '*/}')
+
                 })
 
             })
@@ -83,7 +85,7 @@ function createFile(name, contents, cb) {
 }
 
 function readTemplate(cb) {
-    const ext = vscode.extensions.getExtension('zucska.extract-component');
+    const ext = vscode.extensions.getExtension('zucska.extractcomponent');
 
     fs.readFile(ext.extensionPath + '/template.js', "utf-8", function read(err, data) {
         if (err) {
