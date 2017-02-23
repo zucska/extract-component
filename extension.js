@@ -37,7 +37,7 @@ function activate(context) {
             if (!e || e == '') return
 
             createFile(e.toLowerCase(), text, function (resp) {
-                console.log(resp)
+
                 if (resp) {
                     vscode.window.showInformationMessage(resp);
                     return
