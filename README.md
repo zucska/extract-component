@@ -1,10 +1,5 @@
-# React Extract component
+# VSCode > Extract react component
 
 Extract component to new file
 
-
-
-## todo
-- check props regex
-- add const {a,b} = this.props
-- replace vars
+![](https://github.com/zucska/extract-component/blob/master/extract-component.gif)
