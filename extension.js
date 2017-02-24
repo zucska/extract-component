@@ -1,23 +1,11 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 let vscode = require('vscode');
 const fs = require('fs');
 var mkdirp = require('mkdirp');
 var getDirName = require('path').dirname;
 
-
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 function activate(context) {
 
-    // Use the console to output diagnostic information (console.log) and errors (console.error)
-    // This line of code will only be executed once when your extension is activated
-
-    // The command has been defined in the package.json file
-    // Now provide the implementation of the command with  registerCommand
-    // The commandId parameter must match the command field in package.json
     let disposable = vscode.commands.registerCommand('extension.extractComponent', function () {
-        // The code you place here will be executed every time your command is executed
 
         var editor = vscode.window.activeTextEditor;
         if (!editor) {
@@ -44,8 +32,6 @@ function activate(context) {
                 }
                 actEdit.edit(function (edit) {
                     edit.replace(selection, '<' + capitalizeFirstLetter(e) + ' />')
-                    // edit.replace(selection, '<' + capitalizeFirstLetter(e) + ' />\n\n {/*' + text + '*/}')
-
                 })
 
             })
@@ -63,6 +49,7 @@ function deactivate() {
 
 function createFile(name, contents, cb) {
 
+    // todo add configuration root path
     const path = vscode.workspace.rootPath + '/src/components/' + name + '/index.js'
 
     if (fs.existsSync(path)) {
@@ -87,6 +74,7 @@ function createFile(name, contents, cb) {
 function readTemplate(cb) {
     const ext = vscode.extensions.getExtension('zucska.extractcomponent');
 
+    // todo add version template for reactjs and react native
     fs.readFile(ext.extensionPath + '/template.js', "utf-8", function read(err, data) {
         if (err) {
             throw err;
