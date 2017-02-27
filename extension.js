@@ -24,14 +24,14 @@ function activate(context) {
 
             if (!e || e == '') return
 
-            createFile(e.toLowerCase(), text, function (resp) {
+            createFile(e.toLowerCase(), text, function (err,resp) {
 
-                if (resp) {
-                    vscode.window.showInformationMessage(resp);
+                if (err) {
+                    vscode.window.showInformationMessage(err);
                     return
                 }
                 actEdit.edit(function (edit) {
-                    edit.replace(selection, '<' + capitalizeFirstLetter(e) + ' />')
+                    edit.replace(selection, '<' + capitalizeFirstLetter(e) +' '+ resp + ' />')
                 })
 
             })
@@ -58,17 +58,47 @@ function createFile(name, contents, cb) {
     }
 
     readTemplate(function (template) {
+        const props = createProps(contents)
+        console.log(props)
 
         let newContent = template.replace(new RegExp('componentName', 'g'), capitalizeFirstLetter(name))
         newContent = newContent.replace("'__CONTENTS__'", contents)
+        newContent = newContent.replace("__PROPS__", props[0])
 
         mkdirp(getDirName(path), function (err) {
             if (err) return cb(err);
-            fs.writeFile(path, newContent, cb);
+            fs.writeFile(path, newContent, () =>{
+                cb(null,props[1])
+            });
         });
 
     })
 
+}
+
+function createProps(contents) {
+    const regex = /([a-zA-Z0-9-_]*)={([^0-9]*?)}/g
+    let m;
+    let props = ''
+    let tag = ''
+    while ((m = regex.exec(contents)) !== null) {
+        // This is necessary to avoid infinite loops with zero-width matches
+        if (m.index === regex.lastIndex) {
+            regex.lastIndex++;
+        }
+
+        m.forEach((match, groupIndex) => {
+            //console.log(`Found match, group ${groupIndex}: ${match}`);
+        });
+        
+        if (m[1] != 'style'){
+            props = props + `${m[2]}, `
+            tag = tag + `${m[2]}={${m[2]}} `
+        }
+    }
+    
+    props = props.slice(0,-2)
+    return [props, tag]
 }
 
 function readTemplate(cb) {
@@ -88,3 +118,8 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 exports.deactivate = deactivate;
+
+
+
+// prima regex 
+// ([a-zA-Z0-9-_]*)={([^0-9]*?)}

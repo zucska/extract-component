@@ -23,7 +23,7 @@
         "commands": [
             {
                 "command": "extension.extractComponent",
-                "title": "Extract Component React"
+                "title": "Extract React Component"
             }
         ],
         "menus": {
