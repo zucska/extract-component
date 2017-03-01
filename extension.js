@@ -5,11 +5,11 @@ var getDirName = require('path').dirname;
 
 function activate(context) {
 
-    let disposable = vscode.commands.registerCommand('extension.extractComponent', function () {
+    let disposable = vscode.commands.registerCommand('zucska.extractComponent', function () {
 
         var editor = vscode.window.activeTextEditor;
         if (!editor) {
-            return; // No open text editor
+            return;
         }
 
         var selection = editor.selection;
@@ -18,7 +18,7 @@ function activate(context) {
         let actEdit = vscode.window.activeTextEditor;
 
         vscode.window.showInputBox({
-            prompt: 'Component name',
+            prompt: 'Insert component name',
             value: ''
         }).then(function (e) {
 
@@ -40,11 +40,11 @@ function activate(context) {
     });
 
 
-    let disposableEmbed = vscode.commands.registerCommand('extension.embedComponent', function () {
+    let disposableEmbed = vscode.commands.registerCommand('zucska.embedComponent', function () {
 
         var editor = vscode.window.activeTextEditor;
         if (!editor) {
-            return; // No open text editor
+            return;
         }
 
         var selection = editor.selection;
@@ -53,7 +53,7 @@ function activate(context) {
         let actEdit = vscode.window.activeTextEditor;
 
         vscode.window.showInputBox({
-            prompt: 'Component name',
+            prompt: 'Insert component name',
             value: 'View'
         }).then(function (e) {
 
@@ -72,7 +72,6 @@ function activate(context) {
 }
 exports.activate = activate;
 
-// this method is called when your extension is deactivated
 function deactivate() {
 }
 
@@ -118,7 +117,7 @@ function createProps(contents) {
         m.forEach((match, groupIndex) => {
             //console.log(`Found match, group ${groupIndex}: ${match}`);
         });
-        let val = m[2].replace('this.')
+        let val = m[2].replace('this.','')
         if (m[1] != 'style') {
             props = props + `${val}, `
             tag = tag + `${val}={${val}} `
@@ -131,7 +130,6 @@ function createProps(contents) {
 
 function readTemplate(cb) {
     const ext = vscode.extensions.getExtension('zucska.extractcomponent');
-
     // todo add version template for reactjs and react native
     fs.readFile(ext.extensionPath + '/template.js', "utf-8", function read(err, data) {
         if (err) {

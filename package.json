@@ -22,11 +22,11 @@
     "contributes": {
         "commands": [
             {
-                "command": "extension.extractComponent",
+                "command": "zucska.extractComponent",
                 "title": "Extract React Component"
             },
              {
-                "command": "extension.embedComponent",
+                "command": "zucska.embedComponent",
                 "title": "Embed React Component"
             }
         ],
@@ -34,12 +34,12 @@
             "editor/context": [
                 {
                     "when": "resourceLangId == javascript",
-                    "command": "extension.extractComponent",
+                    "command": "zucska.extractComponent",
                     "group": "navigation"
                 },
                 {
                     "when": "resourceLangId == javascript",
-                    "command": "extension.embedComponent",
+                    "command": "zucska.embedComponent",
                     "group": "navigation"
                 }
             ]
