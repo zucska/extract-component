@@ -18,20 +18,20 @@ function activate(context) {
         let actEdit = vscode.window.activeTextEditor;
 
         vscode.window.showInputBox({
-            prompt: 'nome del componente',
+            prompt: 'Component name',
             value: ''
         }).then(function (e) {
 
             if (!e || e == '') return
 
-            createFile(e.toLowerCase(), text, function (err,resp) {
+            createFile(e.toLowerCase(), text, function (err, resp) {
 
                 if (err) {
                     vscode.window.showInformationMessage(err);
                     return
                 }
                 actEdit.edit(function (edit) {
-                    edit.replace(selection, '<' + capitalizeFirstLetter(e) +' '+ resp + ' />')
+                    edit.replace(selection, '<' + capitalizeFirstLetter(e) + ' ' + resp + ' />')
                 })
 
             })
@@ -39,7 +39,36 @@ function activate(context) {
 
     });
 
-    context.subscriptions.push(disposable);
+
+    let disposableEmbed = vscode.commands.registerCommand('extension.embedComponent', function () {
+
+        var editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            return; // No open text editor
+        }
+
+        var selection = editor.selection;
+        var text = editor.document.getText(selection);
+
+        let actEdit = vscode.window.activeTextEditor;
+
+        vscode.window.showInputBox({
+            prompt: 'Component name',
+            value: 'View'
+        }).then(function (e) {
+
+            if (!e || e == '') return
+
+            actEdit.edit(function (edit) {
+                edit.replace(selection, '<' + e + '>\n' + text + '\n</' + e + '>')
+            })
+        })
+
+    });
+
+    context.subscriptions.push(disposable)
+    context.subscriptions.push(disposableEmbed)
+
 }
 exports.activate = activate;
 
@@ -59,16 +88,15 @@ function createFile(name, contents, cb) {
 
     readTemplate(function (template) {
         const props = createProps(contents)
-        console.log(props)
 
         let newContent = template.replace(new RegExp('componentName', 'g'), capitalizeFirstLetter(name))
-        newContent = newContent.replace("'__CONTENTS__'", contents)
+        newContent = newContent.replace("__CONTENTS__", contents)
         newContent = newContent.replace("__PROPS__", props[0])
 
         mkdirp(getDirName(path), function (err) {
             if (err) return cb(err);
-            fs.writeFile(path, newContent, () =>{
-                cb(null,props[1])
+            fs.writeFile(path, newContent, () => {
+                cb(null, props[1])
             });
         });
 
@@ -90,14 +118,14 @@ function createProps(contents) {
         m.forEach((match, groupIndex) => {
             //console.log(`Found match, group ${groupIndex}: ${match}`);
         });
-        
-        if (m[1] != 'style'){
-            props = props + `${m[2]}, `
-            tag = tag + `${m[2]}={${m[2]}} `
+        let val = m[2].replace('this.')
+        if (m[1] != 'style') {
+            props = props + `${val}, `
+            tag = tag + `${val}={${val}} `
         }
     }
-    
-    props = props.slice(0,-2)
+
+    props = props.slice(0, -2)
     return [props, tag]
 }
 

@@ -24,6 +24,10 @@
             {
                 "command": "extension.extractComponent",
                 "title": "Extract React Component"
+            },
+             {
+                "command": "extension.embedComponent",
+                "title": "Embed React Component"
             }
         ],
         "menus": {
@@ -31,6 +35,11 @@
                 {
                     "when": "resourceLangId == javascript",
                     "command": "extension.extractComponent",
+                    "group": "navigation"
+                },
+                {
+                    "when": "resourceLangId == javascript",
+                    "command": "extension.embedComponent",
                     "group": "navigation"
                 }
             ]

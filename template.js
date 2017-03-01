@@ -5,7 +5,7 @@ class componentName extends Component {
         const {__PROPS__} = this.props
         return (
             <View>
-                '__CONTENTS__'
+                __CONTENTS__
              </View>
         );
     }
