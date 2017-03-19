@@ -2,7 +2,7 @@
     "name": "extractcomponent",
     "displayName": "extract-component",
     "description": "",
-    "version": "0.0.1",
+    "version": "0.2.0",
     "publisher": "zucska",
     "engines": {
         "vscode": "^1.5.0"
@@ -25,7 +25,7 @@
                 "command": "zucska.extractComponent",
                 "title": "Extract React Component"
             },
-             {
+            {
                 "command": "zucska.embedComponent",
                 "title": "Embed React Component"
             }
