@@ -5,7 +5,7 @@ var getDirName = require('path').dirname;
 
 function activate(context) {
 
-    let disposable = vscode.commands.registerCommand('zucska.extractComponent', function () {
+    let disposable = vscode.commands.registerCommand('extension.extractComponent', function () {
 
         var editor = vscode.window.activeTextEditor;
         if (!editor) {
@@ -40,7 +40,7 @@ function activate(context) {
     });
 
 
-    let disposableEmbed = vscode.commands.registerCommand('zucska.embedComponent', function () {
+    let disposableEmbed = vscode.commands.registerCommand('extension.embedComponent', function () {
 
         var editor = vscode.window.activeTextEditor;
         if (!editor) {
@@ -129,7 +129,7 @@ function createProps(contents) {
 }
 
 function readTemplate(cb) {
-    const ext = vscode.extensions.getExtension('zucska.extractcomponent');
+    const ext = vscode.extensions.getExtension('extension.extractcomponent');
     // todo add version template for reactjs and react native
     fs.readFile(ext.extensionPath + '/template.js', "utf-8", function read(err, data) {
         if (err) {
