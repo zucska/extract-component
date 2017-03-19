@@ -1,7 +1,7 @@
 {
     "name": "extractcomponent",
     "displayName": "extract-component",
-    "description": "",
+    "description": "Extract component for react application",
     "version": "0.2.0",
     "publisher": "zucska",
     "engines": {
