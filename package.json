@@ -58,6 +58,7 @@
   },
   "dependencies": {
     "fs": "0.0.1-security",
+    "lodash": "^4.17.4",
     "mkdirp": "^0.5.1",
     "path": "^0.12.7"
   }

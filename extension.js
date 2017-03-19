@@ -2,6 +2,7 @@ let vscode = require('vscode');
 const fs = require('fs');
 var mkdirp = require('mkdirp');
 var getDirName = require('path').dirname;
+var _ = require('lodash');
 
 function activate(context) {
 
@@ -31,7 +32,7 @@ function activate(context) {
                     return
                 }
                 actEdit.edit(function (edit) {
-                    edit.replace(selection, '<' + capitalizeFirstLetter(e) + ' ' + resp + ' />')
+                    edit.replace(selection, '<' + capitalizeFirstLetter(_.camelCase(e)) + ' ' + resp + ' />')
                 })
 
             })
@@ -79,6 +80,7 @@ function createFile(name, contents, cb) {
 
     // todo add configuration root path
     const path = vscode.workspace.rootPath + '/src/components/' + name + '/index.js'
+    console.log(path);
 
     if (fs.existsSync(path)) {
         cb('File exist')
@@ -86,9 +88,9 @@ function createFile(name, contents, cb) {
     }
 
     readTemplate(function (template) {
-        const props = ['',''] //createProps(contents)
+        const props = ['', ''] //createProps(contents)
 
-        let newContent = template.replace(new RegExp('componentName', 'g'), capitalizeFirstLetter(name))
+        let newContent = template.replace(new RegExp('componentName', 'g'), capitalizeFirstLetter(_.camelCase(name)))
         newContent = newContent.replace("__CONTENTS__", contents)
         newContent = newContent.replace("__PROPS__", props[0])
         
@@ -118,7 +120,7 @@ function createProps(contents) {
         m.forEach((match, groupIndex) => {
             //console.log(`Found match, group ${groupIndex}: ${match}`);
         });
-        let val = m[2].replace('this.','')
+        let val = m[2].replace('this.', '')
         if (m[1] != 'style') {
             props = props + `${val}, `
             tag = tag + `${val}={${val}} `
