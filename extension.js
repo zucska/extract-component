@@ -91,9 +91,10 @@ function createFile(name, contents, cb) {
         let newContent = template.replace(new RegExp('componentName', 'g'), capitalizeFirstLetter(name))
         newContent = newContent.replace("__CONTENTS__", contents)
         newContent = newContent.replace("__PROPS__", props[0])
-
+        
         mkdirp(getDirName(path), function (err) {
             if (err) return cb(err);
+            //vscode.workspace.createFile(path,newContent, () => {
             fs.writeFile(path, newContent, () => {
                 cb(null, props[1])
             });
@@ -129,7 +130,7 @@ function createProps(contents) {
 }
 
 function readTemplate(cb) {
-    const ext = vscode.extensions.getExtension('extension.extractcomponent');
+    const ext = vscode.extensions.getExtension('zucska.extractcomponent');
     // todo add version template for reactjs and react native
     fs.readFile(ext.extensionPath + '/template.js', "utf-8", function read(err, data) {
         if (err) {
