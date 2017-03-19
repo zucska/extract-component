@@ -5,4 +5,4 @@ Core functionalities:
 - Embedding: wraps selected component in a component of choice (e.g. View, ScrollView )
 
 
-![](https://github.com/zucska/extract-component/blob/master/extract-component.gif)
+![](https://github.com/zucska/extract-component/blob/master/extract-component.gif?raw=true)
