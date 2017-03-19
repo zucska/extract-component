@@ -1,65 +1,65 @@
 {
-  "name": "extractcomponent",
-  "displayName": "extract-component",
-  "description": "Extract component for react application",
-  "version": "0.2.0",
-  "publisher": "zucska",
-  "engines": {
-    "vscode": "^1.5.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/zucska/extract-component"
-  },
-  "homepage": "https://github.com/zucska/extract-component",
-  "activationEvents": [
-    "*"
-  ],
-  "main": "./extension",
-  "contributes": {
-    "commands": [
-      {
-        "command": "extension.extractComponent",
-        "title": "Extract React Component"
-      },
-      {
-        "command": "extension.embedComponent",
-        "title": "Embed React Component"
-      }
+    "name": "extractcomponent",
+    "displayName": "extract-component",
+    "description": "Extract component for react application",
+    "version": "0.3.0",
+    "publisher": "zucska",
+    "engines": {
+        "vscode": "^1.5.0"
+    },
+    "categories": [
+        "Other"
     ],
-    "menus": {
-      "editor/context": [
-        {
-          "when": "resourceLangId == javascript",
-          "command": "extension.extractComponent",
-          "group": "navigation"
-        },
-        {
-          "when": "resourceLangId == javascript",
-          "command": "extension.embedComponent",
-          "group": "navigation"
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/zucska/extract-component"
+    },
+    "homepage": "https://github.com/zucska/extract-component",
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./extension",
+    "contributes": {
+        "commands": [
+            {
+                "command": "extension.extractComponent",
+                "title": "Extract React Component"
+            },
+            {
+                "command": "extension.embedComponent",
+                "title": "Embed React Component"
+            }
+        ],
+        "menus": {
+            "editor/context": [
+                {
+                    "when": "resourceLangId == javascript",
+                    "command": "extension.extractComponent",
+                    "group": "navigation"
+                },
+                {
+                    "when": "resourceLangId == javascript",
+                    "command": "extension.embedComponent",
+                    "group": "navigation"
+                }
+            ]
         }
-      ]
+    },
+    "scripts": {
+        "postinstall": "node ./node_modules/vscode/bin/install"
+    },
+    "devDependencies": {
+        "typescript": "^2.0.3",
+        "vscode": "^1.0.0",
+        "mocha": "^2.3.3",
+        "eslint": "^3.6.0",
+        "@types/node": "^6.0.40",
+        "@types/mocha": "^2.2.32"
+    },
+    "dependencies": {
+        "fs": "0.0.1-security",
+        "lodash": "^4.17.4",
+        "mkdirp": "^0.5.1",
+        "path": "^0.12.7"
     }
-  },
-  "scripts": {
-    "postinstall": "node ./node_modules/vscode/bin/install"
-  },
-  "devDependencies": {
-    "typescript": "^2.0.3",
-    "vscode": "^1.0.0",
-    "mocha": "^2.3.3",
-    "eslint": "^3.6.0",
-    "@types/node": "^6.0.40",
-    "@types/mocha": "^2.2.32"
-  },
-  "dependencies": {
-    "fs": "0.0.1-security",
-    "lodash": "^4.17.4",
-    "mkdirp": "^0.5.1",
-    "path": "^0.12.7"
-  }
 }
