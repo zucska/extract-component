@@ -86,7 +86,7 @@ function createFile(name, contents, cb) {
     }
 
     readTemplate(function (template) {
-        const props = createProps(contents)
+        const props = ['',''] //createProps(contents)
 
         let newContent = template.replace(new RegExp('componentName', 'g'), capitalizeFirstLetter(name))
         newContent = newContent.replace("__CONTENTS__", contents)
