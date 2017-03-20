@@ -14,6 +14,7 @@ function activate(context) {
         }
 
         var selection = editor.selection;
+        var original = editor.document.getText()
         var text = editor.document.getText(selection);
 
         let actEdit = vscode.window.activeTextEditor;
@@ -25,7 +26,7 @@ function activate(context) {
 
             if (!e || e == '') return
 
-            createFile(e.toLowerCase(), text, function (err, resp) {
+            createFile(e.toLowerCase(), text,original, function (err, resp) {
 
                 if (err) {
                     vscode.window.showInformationMessage(err);
@@ -76,11 +77,10 @@ exports.activate = activate;
 function deactivate() {
 }
 
-function createFile(name, contents, cb) {
+function createFile(name, contents, original, cb) {
 
     // todo add configuration root path
     const path = vscode.workspace.rootPath + '/src/components/' + name + '/index.js'
-    console.log(path);
 
     if (fs.existsSync(path)) {
         cb('File exist')
@@ -93,10 +93,13 @@ function createFile(name, contents, cb) {
         let newContent = template.replace(new RegExp('componentName', 'g'), capitalizeFirstLetter(_.camelCase(name)))
         newContent = newContent.replace("__CONTENTS__", contents)
         newContent = newContent.replace("__PROPS__", props[0])
-        
+
+        // se il file contiene react-native clono anche la riga
+        newContent = newContent.replace("__IMPORT__", generateImport(original))
+
+
         mkdirp(getDirName(path), function (err) {
             if (err) return cb(err);
-            //vscode.workspace.createFile(path,newContent, () => {
             fs.writeFile(path, newContent, () => {
                 cb(null, props[1])
             });
@@ -104,6 +107,21 @@ function createFile(name, contents, cb) {
 
     })
 
+}
+
+function generateImport(str) {
+    const regex = /import[.\s\S]*?from 'react-native';?/g;
+    let m;
+    let result = '';
+    while ((m = regex.exec(str)) !== null) {
+        if (m.index === regex.lastIndex) {
+            regex.lastIndex++;
+        }
+        m.forEach((match, groupIndex) => {
+            result = result+ match+"\n";
+        });
+    }
+    return result
 }
 
 function createProps(contents) {
