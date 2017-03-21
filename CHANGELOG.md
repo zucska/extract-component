@@ -3,6 +3,10 @@
 
 
 ## Bug Fixes
+  - fix regex import
+  ([1ed6b66c](https://github.com/zucska/extract-component/commit/1ed6b66c756d062820e4957cd1cd84554d50416c))
+  - fix regex timeout
+  ([643f9116](https://github.com/zucska/extract-component/commit/643f9116565eaf30a885d4aa51a1a0360ea9e174))
   - fix camelcase
   ([66b03f1e](https://github.com/zucska/extract-component/commit/66b03f1e9a807923271fb22bba47e9258388f170))
   - fix
