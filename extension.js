@@ -118,7 +118,8 @@ function generateImport(str) {
             regex.lastIndex++;
         }
         m.forEach((match, groupIndex) => {
-            result = result+ match+"\n";
+            if (groupIndex == 0)
+                result = result+ match+"\n";
         });
     }
     return result
