@@ -110,7 +110,7 @@ function createFile(name, contents, original, cb) {
 }
 
 function generateImport(str) {
-    const regex = /import (\n?\{?\n?[A-Za-z]* ?\n?\}?,?)*from 'react-native';?/g;
+    const regex = /import (.*) from 'react-native'/g;
     let m;
     let result = '';
     while ((m = regex.exec(str)) !== null) {
