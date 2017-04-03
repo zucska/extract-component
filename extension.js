@@ -3,6 +3,7 @@ const fs = require('fs');
 var mkdirp = require('mkdirp');
 var getDirName = require('path').dirname;
 var _ = require('lodash');
+var lineColumn = require("line-column");
 
 function activate(context) {
 
@@ -26,7 +27,7 @@ function activate(context) {
 
             if (!e || e == '') return
 
-            createFile(e.toLowerCase(), text,original, function (err, resp) {
+            createFile(e.toLowerCase(), text, original, function (err, resp) {
 
                 if (err) {
                     vscode.window.showInformationMessage(err);
@@ -60,7 +61,6 @@ function activate(context) {
         }).then(function (e) {
 
             if (!e || e == '') return
-
             actEdit.edit(function (edit) {
                 edit.replace(selection, '<' + e + '>\n' + text + '\n</' + e + '>')
             })
@@ -68,8 +68,57 @@ function activate(context) {
 
     });
 
+
+    let disposableStyle = vscode.commands.registerCommand('extension.extractStyleComponent', function () {
+
+        var editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            return;
+        }
+
+        var selection = editor.selection;
+        var original = editor.document.getText()
+        var text = editor.document.getText(selection)
+        let actEdit = vscode.window.activeTextEditor
+
+        let newStyle = true
+        let rowInsert = actEdit.document.lineCount + 1
+
+        if (original.indexOf('StyleSheet.create') > -1) {
+            const start = lineColumn(original).fromIndex(original.indexOf('StyleSheet.create'))
+            //const end = start.toIndex(0, original.indexOf('})'))
+            rowInsert = start.line
+            newStyle = false
+        }
+
+        vscode.window.showInputBox({
+            prompt: 'Insert name',
+            value: ''
+        }).then(function (e) {
+            if (!e || e == '') return
+
+            actEdit.edit(function (edit) {
+                const Position = vscode.Position
+                let stylesText = ''
+
+                if (newStyle)
+                    stylesText = `\n\nconst styles = StyleSheet.create({\n ${e}:${text} \n})`
+                else
+                    stylesText = `${e}:${text},\n`
+
+
+                edit.replace(selection, `styles.${e}`)
+                edit.insert(new Position(rowInsert, 0), stylesText);
+            })
+        })
+
+    });
+
+
     context.subscriptions.push(disposable)
     context.subscriptions.push(disposableEmbed)
+    context.subscriptions.push(disposableStyle)
+
 
 }
 exports.activate = activate;
@@ -119,7 +168,7 @@ function generateImport(str) {
         }
         m.forEach((match, groupIndex) => {
             if (groupIndex == 0)
-                result = result+ match+"\n";
+                result = result + match + "\n";
         });
     }
     return result
