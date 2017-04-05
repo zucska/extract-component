@@ -9,4 +9,7 @@ Core functionalities:
 
 - Extract stylesheet inline
 
+- Extract method render
+
+
 ![](https://github.com/zucska/extract-component/blob/master/extract-component.gif?raw=true)
