@@ -43,6 +43,46 @@ function activate(context) {
     });
 
 
+    let disposableMethod = vscode.commands.registerCommand('extension.extractMethodComponent', function () {
+
+        var editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            return;
+        }
+
+        var selection = editor.selection;
+        var original = editor.document.getText()
+        var text = editor.document.getText(selection)
+        let actEdit = vscode.window.activeTextEditor
+        let rowInsert = 0
+        let column = 0
+        if (original.indexOf('render()') > -1) {
+            const start = lineColumn(original).fromIndex(original.indexOf('render()'))
+            rowInsert = start.line - 1
+            column = start.column
+        } else {
+            return
+        }
+
+        vscode.window.showInputBox({
+            prompt: 'Insert name method (render__NAME__)',
+            value: ''
+        }).then(function (e) {
+            if (!e || e == '') return
+
+            const nameMethod = capitalizeFirstLetter(_.camelCase(e))
+            actEdit.edit(function (edit) {
+                const Position = vscode.Position
+                const newtext = `\n\trender${nameMethod}(){\nreturn (\n ${text}\n)\n}\n\n`
+
+                edit.replace(selection, '\t\t{ this.render' + nameMethod + '() }')
+                edit.insert(new Position(rowInsert, column), newtext)
+            })
+        })
+
+    });
+
+
     let disposableEmbed = vscode.commands.registerCommand('extension.embedComponent', function () {
 
         var editor = vscode.window.activeTextEditor;
@@ -116,6 +156,7 @@ function activate(context) {
 
 
     context.subscriptions.push(disposable)
+    context.subscriptions.push(disposableMethod)
     context.subscriptions.push(disposableEmbed)
     context.subscriptions.push(disposableStyle)
 

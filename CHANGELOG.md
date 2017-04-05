@@ -3,5 +3,5 @@
 
 ## new features
 
-- extract stylesheet inline (beta)
-
+- extract stylesheet inline
+- extract method render
