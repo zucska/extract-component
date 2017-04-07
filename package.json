@@ -2,7 +2,7 @@
     "name": "extractcomponent",
     "displayName": "extract-component",
     "description": "Extract component for react application",
-    "version": "0.6.0",
+    "version": "0.6.1",
     "publisher": "zucska",
     "keywords": [
         "javascript",
@@ -29,7 +29,7 @@
         "commands": [
             {
                 "command": "extension.extractComponent",
-                "title": "Extract React Component"
+                "title": "Extract React Component to New File"
             },
             {
                 "command": "extension.embedComponent",
@@ -41,7 +41,7 @@
             },
             {
                 "command": "extension.extractMethodComponent",
-                "title": "Extract Method React Component"
+                "title": "Extract React Component to Method"
             }
         ],
         "menus": {

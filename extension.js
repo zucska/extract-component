@@ -19,6 +19,11 @@ function activate(context) {
         var text = editor.document.getText(selection);
 
         let actEdit = vscode.window.activeTextEditor;
+        const start = lineColumn(original).fromIndex(original.indexOf('extends'))
+        let line = null
+        if (start && start.line) {
+            line = start.line - 1
+        }
 
         vscode.window.showInputBox({
             prompt: 'Insert component name',
@@ -26,15 +31,22 @@ function activate(context) {
         }).then(function (e) {
 
             if (!e || e == '') return
-
-            createFile(e.toLowerCase(), text, original, function (err, resp) {
+            const nameFile = e.toLowerCase()
+            createFile(nameFile, text, original, function (err, resp) {
 
                 if (err) {
                     vscode.window.showInformationMessage(err);
                     return
                 }
                 actEdit.edit(function (edit) {
-                    edit.replace(selection, '<' + capitalizeFirstLetter(_.camelCase(e)) + ' ' + resp + ' />')
+                    const name = capitalizeFirstLetter(_.camelCase(e))
+                    const Position = vscode.Position
+                    const stringImport = `import ${name} from '../${nameFile}'\n\n`
+
+                    if (line)
+                        edit.insert(new Position(line, 0), stringImport)
+
+                    edit.replace(selection, '<' + name + ' ' + resp + ' />')
                 })
 
             })
@@ -187,7 +199,6 @@ function createFile(name, contents, original, cb) {
         // se il file contiene react-native clono anche la riga
         newContent = newContent.replace("__IMPORT__", generateImport(original))
 
-
         mkdirp(getDirName(path), function (err) {
             if (err) return cb(err);
             fs.writeFile(path, newContent, () => {
@@ -215,6 +226,7 @@ function generateImport(str) {
     return result
 }
 
+// DISABLED
 function createProps(contents) {
     const regex = /([a-zA-Z0-9-_]*)={([^0-9]*?)}/g
     let m;
@@ -256,8 +268,3 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 exports.deactivate = deactivate;
-
-
-
-// prima regex 
-// ([a-zA-Z0-9-_]*)={([^0-9]*?)}
