@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 __IMPORT__
 
 class componentName extends Component {
     render() {
-        const {__PROPS__} = this.props
+        //const {__PROPS__} = this.props
         return (
             <View>
                 __CONTENTS__
@@ -12,4 +12,4 @@ class componentName extends Component {
     }
 }
 
-export default componentName;
+export default componentName
