@@ -3,8 +3,9 @@
 Core functionalities:
 - Extraction: extracts component to new file and embeds it in the current file. Props are automatically passed to the new component. 
 
-    (Folder src/components/NAME/index.js)
-    
+(Folder default src/components/NAME/index.js)
+- to change the default folder, edit configuration "extractcomponent.path"
+
 - Embedding: wraps selected component in a component of choice (e.g. View, ScrollView )
 
 - Extract stylesheet inline
