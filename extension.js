@@ -5,6 +5,7 @@ var getDirName = require('path').dirname;
 var _ = require('lodash');
 var lineColumn = require("line-column");
 
+
 function activate(context) {
 
     let disposable = vscode.commands.registerCommand('extension.extractComponent', function () {
@@ -181,13 +182,11 @@ function deactivate() {
 
 function createFile(name, contents, original, cb) {
 
-    // todo add configuration root path
-    const path = vscode.workspace.rootPath + '/src/components/' + name + '/index.js'
+    const pathFolder = vscode.workspace.getConfiguration('extractcomponent').path
+    const path = vscode.workspace.rootPath + pathFolder + name + '/index.js'
 
-    if (fs.existsSync(path)) {
-        cb('File exist')
-        return
-    }
+    if (fs.existsSync(path))
+        return cb('File exist')
 
     readTemplate(function (template) {
         const props = ['', ''] //createProps(contents)

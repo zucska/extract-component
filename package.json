@@ -67,6 +67,20 @@
                     "group": "navigation"
                 }
             ]
+        },
+        "configuration": {
+            "type": "object",
+            "title": "Extact component configuration",
+            "properties": {
+                "extractcomponent.path": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "default": "/src/components/",
+                    "description": "Specifies the folder path where components will be extracted to."
+                }
+            }
         }
     },
     "scripts": {
