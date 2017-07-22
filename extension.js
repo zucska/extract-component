@@ -208,7 +208,7 @@ function createFile(name, contents, original, cb) {
             if (err) return cb(err);
 
             // create package @components
-            if (!fs.exists(pathPackage))
+            if (!fs.existsSync(pathPackage))
                 createPackage(pathPackage)
 
             fs.writeFile(path, newContent, () => {
