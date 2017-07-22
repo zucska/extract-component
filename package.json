@@ -24,7 +24,7 @@
         "*"
     ],
     "main": "./extension",
-    "icon": "images/logo.svg",
+    "icon": "images/logo.png",
     "contributes": {
         "commands": [
             {
