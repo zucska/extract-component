@@ -39,10 +39,15 @@ function activate(context) {
                     vscode.window.showInformationMessage(err);
                     return
                 }
+
                 actEdit.edit(function (edit) {
                     const name = capitalizeFirstLetter(_.camelCase(e))
                     const Position = vscode.Position
-                    const stringImport = `import ${name} from '../${nameFile}'\n\n`
+
+                    const pathFolder = vscode.workspace.getConfiguration('extractcomponent').path
+                    const nameImport = getNameComponents(pathFolder)
+
+                    const stringImport = `import ${name} from '@${nameImport}/${nameFile}'\n\n`
 
                     if (line)
                         edit.insert(new Position(line, 0), stringImport)
@@ -184,6 +189,7 @@ function createFile(name, contents, original, cb) {
 
     const pathFolder = vscode.workspace.getConfiguration('extractcomponent').path
     const path = vscode.workspace.rootPath + pathFolder + name + '/index.js'
+    const pathPackage = vscode.workspace.rootPath + pathFolder + 'package.json'
 
     if (fs.existsSync(path))
         return cb('File exist')
@@ -200,6 +206,11 @@ function createFile(name, contents, original, cb) {
 
         mkdirp(getDirName(path), function (err) {
             if (err) return cb(err);
+
+            // create package @components
+            if (!fs.exists(pathPackage))
+                createPackage(pathPackage)
+
             fs.writeFile(path, newContent, () => {
                 cb(null, props[1])
             });
@@ -207,6 +218,20 @@ function createFile(name, contents, original, cb) {
 
     })
 
+}
+
+function createPackage(folder) {
+
+    const name = getNameComponents(folder)
+    const newContent = `{
+    "name" : "@${name}"    
+}`
+
+    fs.writeFile(folder, newContent, () => { });
+}
+
+function getNameComponents(params) {
+    return _.takeRight(params.split('/'), 2)[0] || 'components'
 }
 
 function generateImport(str) {

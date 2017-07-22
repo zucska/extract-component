@@ -2,7 +2,7 @@
     "name": "extractcomponent",
     "displayName": "extract-component",
     "description": "Extract component for react application",
-    "version": "0.8.0",
+    "version": "0.8.1",
     "publisher": "zucska",
     "keywords": [
         "javascript",
