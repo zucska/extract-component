@@ -1,12 +1,16 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
         "target": "es6",
+        "module": "commonjs",
         "lib": [
             "es6"
-        ]
+        ],
+        "allowSyntheticDefaultImports": true
     },
+    "include": [
+        "extension/**/*"
+    ],
     "exclude": [
-        "node_modules"
+        "assets"
     ]
 }

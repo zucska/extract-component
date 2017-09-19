@@ -24,7 +24,7 @@
         "*"
     ],
     "main": "./extension",
-    "icon": "images/logo.png",
+    "icon": "assets/images/logo.png",
     "contributes": {
         "commands": [
             {
@@ -40,8 +40,8 @@
                 "title": "Extract StyleSheet React Component"
             },
             {
-                "command": "extension.extractMethodComponent",
-                "title": "Extract React Component to Method"
+                "command": "extension.extractComponentToFunction",
+                "title": "Extract React Component to Function"
             }
         ],
         "menus": {
@@ -53,7 +53,7 @@
                 },
                 {
                     "when": "resourceLangId == javascript",
-                    "command": "extension.extractMethodComponent",
+                    "command": "extension.extractComponentToFunction",
                     "group": "navigation"
                 },
                 {

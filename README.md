@@ -13,4 +13,4 @@ Core functionalities:
 - Extract method render
 
 
-![](https://github.com/zucska/extract-component/blob/master/extract-component.gif?raw=true)
+![](https://github.com/zucska/extract-component/blob/master/assets/images/extract-component.gif?raw=true)
