@@ -7,7 +7,7 @@ const path = require('path');
 const _ = require('lodash');
 const lineColumn = require("line-column");
 
-const { createFile, createPackage, getNameComponents, generateImport, capitalizeFirstLetter } = require('./utils')
+const { createFile, getNameComponents, capitalizeFirstLetter } = require('./utils')
 
 
 function extractComponentToFile() {

@@ -1,4 +1,5 @@
-const vscode = require('vscode')
+const vscode = require('vscode');
+
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const { dirname } = require('path')
@@ -25,7 +26,7 @@ const createFile = (name, contents, original, cb) => {
     readTemplate(function (template) {
         const props = ['', ''] //createProps(contents)
 
-        let newContent = template.replace(new RegExp('componentName', 'g'), capitalizeFirstLetter(_.camelCase(name)))
+        let newContent = template.replace(new RegExp('__COMPONENTNAME__', 'g'), capitalizeFirstLetter(_.camelCase(name)))
         newContent = newContent.replace("__CONTENTS__", contents)
         newContent = newContent.replace("__PROPS__", props[0])
 
@@ -98,4 +99,3 @@ exports.createPackage = createPackage;
 exports.generateImport = generateImport;
 exports.getNameComponents = getNameComponents;
 exports.capitalizeFirstLetter = capitalizeFirstLetter;
-
