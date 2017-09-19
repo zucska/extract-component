@@ -1,4 +1,4 @@
-const vscode =  require('vscode');
+const vscode = require('vscode');
 
 const fs = require('fs');
 const mkdirp = require('mkdirp');

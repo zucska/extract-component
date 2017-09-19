@@ -1,12 +1,17 @@
+const vscode = require('vscode')
 const fs = require('fs');
 const mkdirp = require('mkdirp');
-const path = require('path');
+const { dirname } = require('path')
 
 const _ = require('lodash');
 const lineColumn = require("line-column");
 
 
-exports.createFile = (name, contents, original, cb)  => {
+const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+const createFile = (name, contents, original, cb) => {
 
     console.log('createFile');
 
@@ -27,7 +32,7 @@ exports.createFile = (name, contents, original, cb)  => {
         // se il file contiene react-native clono anche la riga
         newContent = newContent.replace("__IMPORT__", generateImport(original))
 
-        mkdirp(path.dirname(path), function (err) {
+        mkdirp(dirname(path), function (err) {
             if (err) return cb(err);
 
             // create package @components
@@ -43,7 +48,7 @@ exports.createFile = (name, contents, original, cb)  => {
 
 }
 
-exports.createPackage = (folder) => {
+const createPackage = (folder) => {
 
     const name = getNameComponents(folder)
     const newContent = `{
@@ -53,11 +58,11 @@ exports.createPackage = (folder) => {
     fs.writeFile(folder, newContent, () => { });
 }
 
-exports.getNameComponents = (params) => {
+const getNameComponents = (params) => {
     return _.takeRight(params.split('/'), 2)[0] || 'components'
 }
 
-exports.generateImport = (str) => {
+const generateImport = (str) => {
     const regex = /import (.*) from 'react-native'/g;
     let m;
     let result = '';
@@ -73,10 +78,10 @@ exports.generateImport = (str) => {
     return result
 }
 
-exports.readTemplate = (cb) => {
+const readTemplate = (cb) => {
     const ext = vscode.extensions.getExtension('zucska.extractcomponent');
     // todo add version template for reactjs and react native
-    fs.readFile(ext.extensionPath + '/template.js', "utf-8", function read(err, data) {
+    fs.readFile(ext.extensionPath + '/assets/template.js', "utf-8", function read(err, data) {
         if (err) {
             throw err;
         }
@@ -85,6 +90,12 @@ exports.readTemplate = (cb) => {
 
 }
 
-exports.capitalizeFirstLetter = (string) =>  {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
+
+
+exports.createFile = createFile;
+exports.readTemplate = readTemplate;
+exports.createPackage = createPackage;
+exports.generateImport = generateImport;
+exports.getNameComponents = getNameComponents;
+exports.capitalizeFirstLetter = capitalizeFirstLetter;
+
