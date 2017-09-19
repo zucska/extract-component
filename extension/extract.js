@@ -10,7 +10,7 @@ const lineColumn = require("line-column");
 const { createFile, createPackage, getNameComponents, generateImport, capitalizeFirstLetter } = require('./utils')
 
 
-function extractComponent() {
+function extractComponentToFile() {
 
     var editor = vscode.window.activeTextEditor;
     if (!editor) {
@@ -172,7 +172,9 @@ function extractStyle() {
 }
 
 
-exports.component = extractComponent;
+exports.componentToFile = extractComponentToFile;
 exports.componentToFunction = extractComponentToFunction;
+
 exports.style = extractStyle;
+
 exports.embed = embedComponent;

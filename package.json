@@ -28,27 +28,27 @@
     "contributes": {
         "commands": [
             {
-                "command": "extension.extractComponent",
+                "command": "extension.extractComponentToFile",
                 "title": "Extract React Component to New File"
-            },
-            {
-                "command": "extension.embedComponent",
-                "title": "Embed React Component"
-            },
-            {
-                "command": "extension.extractStyleComponent",
-                "title": "Extract StyleSheet React Component"
             },
             {
                 "command": "extension.extractComponentToFunction",
                 "title": "Extract React Component to Function"
+            },
+            {
+                "command": "extension.extractStyle",
+                "title": "Extract React Component StyleSheet"
+            },
+            {
+                "command": "extension.embedComponent",
+                "title": "Embed React Component"
             }
         ],
         "menus": {
             "editor/context": [
                 {
                     "when": "resourceLangId == javascript",
-                    "command": "extension.extractComponent",
+                    "command": "extension.extractComponentToFile",
                     "group": "navigation"
                 },
                 {
@@ -58,12 +58,12 @@
                 },
                 {
                     "when": "resourceLangId == javascript",
-                    "command": "extension.embedComponent",
+                    "command": "extension.extractStyle",
                     "group": "navigation"
                 },
                 {
                     "when": "resourceLangId == javascript",
-                    "command": "extension.extractStyleComponent",
+                    "command": "extension.embedComponent",
                     "group": "navigation"
                 }
             ]

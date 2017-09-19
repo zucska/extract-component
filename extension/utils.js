@@ -6,7 +6,7 @@ const _ = require('lodash');
 const lineColumn = require("line-column");
 
 
-function createFile(name, contents, original, cb) {
+exports.createFile = (name, contents, original, cb)  => {
 
     console.log('createFile');
 
@@ -43,7 +43,7 @@ function createFile(name, contents, original, cb) {
 
 }
 
-function createPackage(folder) {
+exports.createPackage = (folder) => {
 
     const name = getNameComponents(folder)
     const newContent = `{
@@ -53,11 +53,11 @@ function createPackage(folder) {
     fs.writeFile(folder, newContent, () => { });
 }
 
-function getNameComponents(params) {
+exports.getNameComponents = (params) => {
     return _.takeRight(params.split('/'), 2)[0] || 'components'
 }
 
-function generateImport(str) {
+exports.generateImport = (str) => {
     const regex = /import (.*) from 'react-native'/g;
     let m;
     let result = '';
@@ -73,7 +73,7 @@ function generateImport(str) {
     return result
 }
 
-function readTemplate(cb) {
+exports.readTemplate = (cb) => {
     const ext = vscode.extensions.getExtension('zucska.extractcomponent');
     // todo add version template for reactjs and react native
     fs.readFile(ext.extensionPath + '/template.js', "utf-8", function read(err, data) {
@@ -85,6 +85,6 @@ function readTemplate(cb) {
 
 }
 
-function capitalizeFirstLetter(string) {
+exports.capitalizeFirstLetter = (string) =>  {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
