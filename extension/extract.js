@@ -7,7 +7,6 @@ const { settings, editorContext, createFile, capitalizedCamelCase } = require('.
 
 const extractComponentToFile = () => editorContext((editor, selection, text, selectedText) => {
     vscode.window.showInputBox({ prompt: 'Insert component name' }).then(input => {
-
         if (!input) return;
         const fileName = input.toLowerCase();
 
@@ -30,44 +29,21 @@ const extractComponentToFile = () => editorContext((editor, selection, text, sel
     });
 });
 
-const extractComponentToFunction = () => {
 
-    var editor = vscode.window.activeTextEditor;
-    if (!editor) {
-        return;
-    }
+const extractComponentToFunction = () => editorContext((editor, selection, text, selectedText) => {
+    if (!~text.indexOf('render()')) return;
+    vscode.window.showInputBox({ prompt: 'Insert name method (render__NAME__)' }).then(input => {
+        if (!input) return;
+        editor.edit(edit => {
+            const functionName = capitalizedCamelCase(input);
+            const start = lineColumn(text).fromIndex(text.indexOf('render()'));
+            const renderFunctionText = `\n\trender${functionName}(){\nreturn(\n ${selectedText}\n) \n }\n\n`;
 
-    var selection = editor.selection;
-    var original = editor.document.getText()
-    var text = editor.document.getText(selection)
-    let actEdit = vscode.window.activeTextEditor
-    let rowInsert = 0
-    let column = 0
-    if (original.indexOf('render()') > -1) {
-        const start = lineColumn(original).fromIndex(original.indexOf('render()'))
-        rowInsert = start.line - 1
-        column = start.column
-    } else {
-        return
-    }
-
-    vscode.window.showInputBox({
-        prompt: 'Insert name method (render__NAME__)',
-        value: ''
-    }).then(function (e) {
-        if (!e || e == '') return
-
-        const nameMethod = capitalizedCamelCase(e)
-        actEdit.edit(function (edit) {
-            const Position = vscode.Position
-            const newtext = `\n\trender${nameMethod}(){\nreturn(\n ${text}\n) \n }\n\n`
-
-            edit.replace(selection, '\t\t{ this.render' + nameMethod + '() }')
-            edit.insert(new Position(rowInsert, column), newtext)
-        })
-    })
-}
-
+            edit.insert(new Position(start.line - 1, start.col - 1), renderFunctionText);
+            edit.replace(selection, `\t\t{this.render${functionName}()}`);
+        });
+    });
+});
 
 
 function embedComponent() {
