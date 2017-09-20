@@ -1,13 +1,13 @@
 const vscode = require('vscode');
-const extract = require('./extract');
+const commands = require('./commands');
 
 exports.activate = (context) => {
     const registerCommand = vscode.commands.registerCommand
 
-    const disposableComponent = registerCommand('extension.extractComponentToFile', extract.componentToFile);
-    const disposableMethod = registerCommand('extension.extractComponentToFunction', extract.componentToFunction);
-    const disposableStyle = registerCommand('extension.extractStyle', extract.style);
-    const disposableEmbed = registerCommand('extension.embedComponent', extract.embed);
+    const disposableComponent = registerCommand('extension.extractComponentToFile', commands.extractComponentToFile);
+    const disposableMethod = registerCommand('extension.extractComponentToFunction', commands.extractComponentToFunction);
+    const disposableStyle = registerCommand('extension.extractStyle', commands.extractStyle);
+    const disposableEmbed = registerCommand('extension.embedComponent', commands.embedComponent);
 
     context.subscriptions.push(disposableComponent);
     context.subscriptions.push(disposableMethod);

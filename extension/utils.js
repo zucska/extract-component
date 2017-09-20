@@ -103,9 +103,9 @@ const editorContext = (callback) => {
 }
 
 const settings = {
+    extensionPath: vscode.extensions.getExtension('zucska.extractcomponent').extensionPath,
     componentsFolderPath: vscode.workspace.getConfiguration('extractcomponent').path,
     componentsFolderLastPath: getNameComponents(vscode.workspace.getConfiguration('extractcomponent').path),
-    extensionPath: vscode.extensions.getExtension('zucska.extractcomponent').extensionPath,
 }
 
 exports.settings = settings;

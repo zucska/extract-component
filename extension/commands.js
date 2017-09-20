@@ -32,7 +32,7 @@ exports.extractComponentToFile = () => editorContext((editor, selection, text, s
 
 exports.extractComponentToFunction = () => editorContext((editor, selection, text, selectedText) => {
     if (!~text.indexOf('render()')) return;
-    vscode.window.showInputBox({ prompt: 'Insert name method (render__NAME__)' }).then(input => {
+    vscode.window.showInputBox({ prompt: 'Insert component name (render__NAME__)' }).then(input => {
         if (!input) return;
         editor.edit(edit => {
             const functionName = capitalizedCamelCase(input);
@@ -41,16 +41,6 @@ exports.extractComponentToFunction = () => editorContext((editor, selection, tex
 
             edit.insert(new Position(start.line - 1, start.col - 1), renderFunctionText);
             edit.replace(selection, `\t\t{this.render${functionName}()}`);
-        });
-    });
-});
-
-
-exports.embedComponent = () => editorContext((editor, selection, text, selectedText) => {
-    vscode.window.showInputBox({ prompt: 'Insert component name' }).then(input => {
-        if (!input) return;
-        editor.edit(edit => {
-            edit.replace(selection, `<${input}>\n${selectedText}\n</${input}>`);
         });
     });
 });
@@ -72,6 +62,16 @@ exports.extractStyle = () => editorContext((editor, selection, text, selectedTex
 
             edit.replace(selection, `styles.${input}`);
             edit.insert(new Position(row, 0), stylesText);
+        });
+    });
+});
+
+
+exports.embedComponent = () => editorContext((editor, selection, text, selectedText) => {
+    vscode.window.showInputBox({ prompt: 'Insert component name' }).then(input => {
+        if (!input) return;
+        editor.edit(edit => {
+            edit.replace(selection, `<${input}>\n${selectedText}\n</${input}>`);
         });
     });
 });
