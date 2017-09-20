@@ -16,9 +16,12 @@ const createFile = (name, contents, original, cb) => {
     if (fs.existsSync(path))
         return cb('File exist')
 
-    readTemplate(function (template) {
+
+    fs.readFile(settings.extensionPath + '/assets/template.js', "utf-8", function read(err, data) {
+        if (err) throw err;
+        const template = data.toString();
         const props = ['', ''] //createProps(contents)
-        
+
         let newContent = template.replace(new RegExp('__COMPONENTNAME__', 'g'), capitalizedCamelCase(name))
         newContent = newContent.replace("__CONTENTS__", contents)
         newContent = newContent.replace("__PROPS__", props[0])
@@ -37,9 +40,7 @@ const createFile = (name, contents, original, cb) => {
                 cb(null)
             });
         });
-
-    })
-
+    });
 }
 
 const capitalizedCamelCase = (e) => {
@@ -48,7 +49,7 @@ const capitalizedCamelCase = (e) => {
 
 const createPackage = (folder) => {
 
-    const name = getNameComponents(folder)
+    const name = lastPathComponent(folder)
     const newContent = `{
         "name" : "@${name}"
         }`
@@ -56,7 +57,7 @@ const createPackage = (folder) => {
     fs.writeFile(folder, newContent, () => { });
 }
 
-const getNameComponents = (params) => {
+const lastPathComponent = (params) => {
     return _.takeRight(params.split('/'), 2)[0] || 'components'
 }
 
@@ -76,40 +77,32 @@ const generateImport = (str) => {
     return result
 }
 
-const readTemplate = (cb) => {
-    //TODO Version template for reactjs and reac- native
-    fs.readFile(settings.extensionPath + '/assets/template.js', "utf-8", function read(err, data) {
-        if (err) {
-            throw err;
-        }
-        cb(data.toString())
-    });
 
-}
+
 
 
 const editorContext = (callback) => {
-
-    var editor = vscode.window.activeTextEditor;
+    const editor = vscode.window.activeTextEditor;
 
     if (editor) {
-        var selection = editor.selection;
-        var original = editor.document.getText()
-        var text = editor.document.getText(selection);
+        const selection = editor.selection;
+        const original = editor.document.getText();
+        const text = editor.document.getText(selection);
 
-        callback(editor, selection, original, text)
+        return callback(editor, selection, original, text);
     }
+};
 
-}
 
 const settings = {
     extensionPath: vscode.extensions.getExtension('zucska.extractcomponent').extensionPath,
     componentsFolderPath: vscode.workspace.getConfiguration('extractcomponent').path,
-    componentsFolderLastPath: getNameComponents(vscode.workspace.getConfiguration('extractcomponent').path),
-}
+    componentsFolderLastPath: lastPathComponent(vscode.workspace.getConfiguration('extractcomponent').path),
+};
+
 
 exports.settings = settings;
+exports.capitalizedCamelCase = capitalizedCamelCase;
 
 exports.createFile = createFile;
 exports.editorContext = editorContext;
-exports.capitalizedCamelCase = capitalizedCamelCase;
