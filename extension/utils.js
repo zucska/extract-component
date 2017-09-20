@@ -1,59 +1,20 @@
 const vscode = require('vscode');
 
+const _ = require('lodash');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
-const { dirname } = require('path')
 
-const _ = require('lodash');
-
-
-const createFile = (name, contents, original, cb) => {
-
-    const pathFolder = settings.componentsFolderPath
-    const path = vscode.workspace.rootPath + pathFolder + name + '/index.js'
-    const pathPackage = vscode.workspace.rootPath + pathFolder + 'package.json'
-
-    if (fs.existsSync(path))
-        return cb('File exist')
+const { dirname } = require('path');
 
 
-    fs.readFile(settings.extensionPath + '/assets/template.js', "utf-8", function read(err, data) {
-        if (err) throw err;
-        const template = data.toString();
-        const props = ['', ''] //createProps(contents)
-
-        let newContent = template.replace(new RegExp('__COMPONENTNAME__', 'g'), capitalizedCamelCase(name))
-        newContent = newContent.replace("__CONTENTS__", contents)
-        newContent = newContent.replace("__PROPS__", props[0])
-
-        // se il file contiene react-native clono anche la riga
-        newContent = newContent.replace("__IMPORT__", generateImport(original))
-
-        mkdirp(dirname(path), function (err) {
-            if (err) return cb(err);
-
-            // create package @components
-            if (!fs.existsSync(pathPackage))
-                createPackage(pathPackage)
-
-            fs.writeFile(path, newContent, () => {
-                cb(null)
-            });
-        });
-    });
-}
 
 const capitalizedCamelCase = (e) => {
     return _.capitalize(_.camelCase(e))
 }
 
 const createPackage = (folder) => {
-
     const name = lastPathComponent(folder)
-    const newContent = `{
-        "name" : "@${name}"
-        }`
-
+    const newContent = `{\n\t"name" : "@${name}"\n}`
     fs.writeFile(folder, newContent, () => { });
 }
 
@@ -79,6 +40,30 @@ const generateImport = (str) => {
 
 
 
+const createFile = (name, contents, original, callback) => {
+    const rootPath = vscode.workspace.rootPath;
+    const folderPath = settings.componentsFolderPath;
+    const filePath = `${rootPath}${folderPath}${name}/index.js`;
+    const packagePath = `${rootPath}${folderPath}package.json`;
+
+    if (fs.existsSync(filePath)) return callback('File exists');
+
+    fs.readFile(`${settings.extensionPath}/assets/template.js`, 'utf-8', (err, data) => {
+        let contents = data.toString();
+        contents = contents.replace(new RegExp('__COMPONENTNAME__', 'g'), capitalizedCamelCase(name))
+        contents = contents.replace("__CONTENTS__", contents)
+        contents = contents.replace("__IMPORT__", generateImport(original))
+
+        mkdirp(dirname(filePath), err => {
+            if (err) return callback(err);
+
+            if (!fs.existsSync(packagePath))
+                createPackage(packagePath);
+
+            fs.writeFile(filePath, contents, callback);
+        });
+    });
+}
 
 
 const editorContext = (callback) => {
@@ -97,7 +82,7 @@ const editorContext = (callback) => {
 const settings = {
     extensionPath: vscode.extensions.getExtension('zucska.extractcomponent').extensionPath,
     componentsFolderPath: vscode.workspace.getConfiguration('extractcomponent').path,
-    componentsFolderLastPath: lastPathComponent(vscode.workspace.getConfiguration('extractcomponent').path),
+    componentsFolderLastPath: lastPathComponent(vscode.workspace.getConfiguration('extractcomponent').path)
 };
 
 
