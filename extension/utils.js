@@ -1,9 +1,8 @@
 const vscode = require('vscode');
 
-const _ = require('lodash');
 const fs = require('fs');
+const _ = require('lodash');
 const mkdirp = require('mkdirp');
-
 const { dirname } = require('path');
 
 
@@ -48,10 +47,10 @@ const createFile = (name, contents, original, callback) => {
     if (fs.existsSync(filePath)) return callback('File exists');
 
     fs.readFile(`${settings.extensionPath}/assets/template.js`, 'utf-8', (err, data) => {
-        let contents = data.toString();
-        contents = contents.replace(new RegExp('__COMPONENTNAME__', 'g'), capitalizedCamelCase(name));
-        contents = contents.replace("__CONTENTS__", contents);
-        contents = contents.replace("__IMPORT__", generateImport(original));
+        let componentContents = data.toString();
+        componentContents = componentContents.replace(new RegExp('__COMPONENTNAME__', 'g'), capitalizedCamelCase(name));
+        componentContents = componentContents.replace("__CONTENTS__", contents);
+        componentContents = componentContents.replace("__IMPORT__", generateImport(original));
 
         mkdirp(dirname(filePath), err => {
             if (err) return callback(err);
@@ -59,7 +58,7 @@ const createFile = (name, contents, original, callback) => {
             if (!fs.existsSync(packagePath))
                 createPackage(packagePath);
 
-            fs.writeFile(filePath, contents, callback);
+            fs.writeFile(filePath, componentContents, callback);
         });
     });
 }
