@@ -7,37 +7,36 @@ const mkdirp = require('mkdirp');
 const { dirname } = require('path');
 
 
-
-const capitalizedCamelCase = (e) => {
-    return _.capitalize(_.camelCase(e))
-}
+const noop = () => {}
 
 const createPackage = (folder) => {
-    const name = lastPathComponent(folder)
-    const newContent = `{\n\t"name" : "@${name}"\n}`
-    fs.writeFile(folder, newContent, () => { });
+    const name = lastPathComponent(folder);
+    const newContent = `{\n\t"name" : "@${name}"\n}`;
+    fs.writeFile(folder, newContent, noop);
 }
 
 const lastPathComponent = (params) => {
-    return _.takeRight(params.split('/'), 2)[0] || 'components'
+    return _.takeRight(params.split('/'))[0] || 'components';
 }
 
 const generateImport = (str) => {
+    let m, result = '';
     const regex = /import (.*) from 'react-native'/g;
-    let m;
-    let result = '';
     while ((m = regex.exec(str)) !== null) {
-        if (m.index === regex.lastIndex) {
+        if (m.index === regex.lastIndex)
             regex.lastIndex++;
-        }
         m.forEach((match, groupIndex) => {
             if (groupIndex == 0)
                 result = result + match + "\n";
         });
     }
-    return result
+    return result;
 }
 
+
+const capitalizedCamelCase = (e) => {
+    return _.capitalize(_.camelCase(e))
+}
 
 
 const createFile = (name, contents, original, callback) => {
@@ -50,9 +49,9 @@ const createFile = (name, contents, original, callback) => {
 
     fs.readFile(`${settings.extensionPath}/assets/template.js`, 'utf-8', (err, data) => {
         let contents = data.toString();
-        contents = contents.replace(new RegExp('__COMPONENTNAME__', 'g'), capitalizedCamelCase(name))
-        contents = contents.replace("__CONTENTS__", contents)
-        contents = contents.replace("__IMPORT__", generateImport(original))
+        contents = contents.replace(new RegExp('__COMPONENTNAME__', 'g'), capitalizedCamelCase(name));
+        contents = contents.replace("__CONTENTS__", contents);
+        contents = contents.replace("__IMPORT__", generateImport(original));
 
         mkdirp(dirname(filePath), err => {
             if (err) return callback(err);
