@@ -13,8 +13,8 @@ const createPackage = (folder) => {
     fs.writeFile(folder, package, noop);
 }
 
-const lastPathComponent = (params) => {
-    return _.takeRight(params.split('/'))[0] || 'components';
+const lastPathComponent = (path) => {
+    return _.takeRight(path.split('/'))[0] || 'components';
 }
 
 const generateImport = (text, selection) => {
@@ -23,8 +23,8 @@ const generateImport = (text, selection) => {
 }
 
 
-const capitalizedCamelCase = (e) => {
-    return _.capitalize(_.camelCase(e))
+const capitalizedCamelCase = (text) => {
+    return _.capitalize(_.camelCase(text))
 }
 
 
@@ -51,7 +51,7 @@ const createFile = (name, contents, original, callback) => {
             fs.writeFile(filePath, componentContents, callback);
         });
     });
-}
+};
 
 
 const editorContext = (callback) => {
