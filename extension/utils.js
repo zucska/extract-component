@@ -9,27 +9,17 @@ const { dirname } = require('path');
 const noop = () => {}
 
 const createPackage = (folder) => {
-    const name = lastPathComponent(folder);
-    const newContent = `{\n\t"name" : "@${name}"\n}`;
-    fs.writeFile(folder, newContent, noop);
+    const package = `{\n\t"name" : "@${lastPathComponent(folder)}"\n}`;
+    fs.writeFile(folder, package, noop);
 }
 
 const lastPathComponent = (params) => {
     return _.takeRight(params.split('/'))[0] || 'components';
 }
 
-const generateImport = (str) => {
-    let m, result = '';
-    const regex = /import (.*) from 'react-native'/g;
-    while ((m = regex.exec(str)) !== null) {
-        if (m.index === regex.lastIndex)
-            regex.lastIndex++;
-        m.forEach((match, groupIndex) => {
-            if (groupIndex == 0)
-                result = result + match + "\n";
-        });
-    }
-    return result;
+const generateImport = (text, selection) => {
+    const regex = /import(?:[\W])*?\{([^}]*?)\}(?:[\W])*?from.*'react-native'/gm;
+    return text.match(regex).join('\n')
 }
 
 
@@ -50,7 +40,7 @@ const createFile = (name, contents, original, callback) => {
         let componentContents = data.toString();
         componentContents = componentContents.replace(new RegExp('__COMPONENTNAME__', 'g'), capitalizedCamelCase(name));
         componentContents = componentContents.replace("__CONTENTS__", contents);
-        componentContents = componentContents.replace("__IMPORT__", generateImport(original));
+        componentContents = componentContents.replace("__IMPORT__", generateImport(original, contents));
 
         mkdirp(dirname(filePath), err => {
             if (err) return callback(err);
