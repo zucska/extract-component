@@ -15,20 +15,20 @@ const extractComponentToFile = () => editorContext((editor, selection, text, sel
             if (err) return vscode.window.showInformationMessage(err);
 
             editor.edit(edit => {
-                const componentName = capitalizedCamelCase(fileName)
-                const importString = `import ${componentName} from '@${settings.componentsFolderLastPath}/${fileName}'\n\n`
+                const componentName = capitalizedCamelCase(fileName);
+                const importString = `import ${componentName} from '@${settings.componentsFolderLastPath}/${fileName}'\n\n`;
 
-                const start = lineColumn(text).fromIndex(text.indexOf('extends'))
-                const line = start && start.line && start.line - 1
+                const start = lineColumn(text).fromIndex(text.indexOf('extends'));
+                const line = start && start.line && start.line - 1;
 
                 if (line)
-                    edit.insert(new Position(line, 0), importString)
+                    edit.insert(new Position(line, 0), importString);
 
-                edit.replace(selection, `<${componentName}/>`)
-            })
-        })
-    })
-})
+                edit.replace(selection, `<${componentName}/>`);
+            });
+        });
+    });
+});
 
 const extractComponentToFunction = () => {
 
