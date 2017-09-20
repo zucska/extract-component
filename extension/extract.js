@@ -46,75 +46,35 @@ const extractComponentToFunction = () => editorContext((editor, selection, text,
 });
 
 
-function embedComponent() {
-
-    var editor = vscode.window.activeTextEditor;
-    if (!editor) {
-        return;
-    }
-
-    var selection = editor.selection;
-    var text = editor.document.getText(selection);
-
-    let actEdit = vscode.window.activeTextEditor;
-
-    vscode.window.showInputBox({
-        prompt: 'Insert component name',
-        value: 'View'
-    }).then(function (e) {
-
-        if (!e || e == '') return
-        actEdit.edit(function (edit) {
-            edit.replace(selection, '<' + e + '>\n' + text + '\n</' + e + '>')
-        })
-    })
-
-}
-
-function extractStyle() {
-
-    var editor = vscode.window.activeTextEditor;
-    if (!editor) {
-        return;
-    }
-
-    var selection = editor.selection;
-    var original = editor.document.getText()
-    var text = editor.document.getText(selection)
-    let actEdit = vscode.window.activeTextEditor
-
-    let newStyle = true
-    let rowInsert = actEdit.document.lineCount + 1
-
-    if (original.indexOf('StyleSheet.create') > -1) {
-        const start = lineColumn(original).fromIndex(original.indexOf('StyleSheet.create'))
-        //const end = start.toIndex(0, original.indexOf('})'))
-        rowInsert = start.line
-        newStyle = false
-    }
-
-    vscode.window.showInputBox({
-        prompt: 'Insert name',
-        value: ''
-    }).then(function (e) {
-        if (!e || e == '') return
-
-        actEdit.edit(function (edit) {
-            const Position = vscode.Position
-            let stylesText = ''
-
-            if (newStyle)
-                stylesText = `\n\nconst styles = StyleSheet.create({ \n ${e}:${text} \n}) `
-            else
-                stylesText = `${e}:${text},\n`
+const embedComponent = () => editorContext((editor, selection, text, selectedText) => {
+    vscode.window.showInputBox({ prompt: 'Insert component name' }).then(input => {
+        if (!input) return;
+        editor.edit(edit => {
+            edit.replace(selection, `<${input}>\n${selectedText}\n</${input}>`);
+        });
+    });
+});
 
 
-            edit.replace(selection, `styles.${e}`)
-            edit.insert(new Position(rowInsert, 0), stylesText);
-        })
-    })
+const extractStyle = () => editorContext((editor, selection, text, selectedText) => {
+    vscode.window.showInputBox({ prompt: 'Insert name' }).then(input => {
+        if (!input) return;
+        editor.edit(edit => {
+            let row = editor.document.lineCount + 1, stylesText;
 
-}
+            if (!!~text.indexOf('StyleSheet.create')) {
+                row = lineColumn(text).fromIndex(text.indexOf('StyleSheet.create')).line;
+                stylesText = `${input}: ${selectedText},\n`;
+            }
+            else {
+                stylesText = `\n\nconst styles = StyleSheet.create({\n${input}: ${selectedText},\n})`;
+            }
+
+            edit.replace(selection, `styles.${input}`);
+            edit.insert(new Position(row, 0), stylesText);
+        });
+    });
+});
 
 
 exports.componentToFile = extractComponentToFile;
