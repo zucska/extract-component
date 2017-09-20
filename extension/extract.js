@@ -5,7 +5,7 @@ const { Position } = vscode;
 const { settings, editorContext, createFile, capitalizedCamelCase } = require('./utils');
 
 
-const extractComponentToFile = () => editorContext((editor, selection, text, selectedText) => {
+exports.extractComponentToFile = () => editorContext((editor, selection, text, selectedText) => {
     vscode.window.showInputBox({ prompt: 'Insert component name' }).then(input => {
         if (!input) return;
         const fileName = input.toLowerCase();
@@ -30,7 +30,7 @@ const extractComponentToFile = () => editorContext((editor, selection, text, sel
 });
 
 
-const extractComponentToFunction = () => editorContext((editor, selection, text, selectedText) => {
+exports.extractComponentToFunction = () => editorContext((editor, selection, text, selectedText) => {
     if (!~text.indexOf('render()')) return;
     vscode.window.showInputBox({ prompt: 'Insert name method (render__NAME__)' }).then(input => {
         if (!input) return;
@@ -46,7 +46,7 @@ const extractComponentToFunction = () => editorContext((editor, selection, text,
 });
 
 
-const embedComponent = () => editorContext((editor, selection, text, selectedText) => {
+exports.embedComponent = () => editorContext((editor, selection, text, selectedText) => {
     vscode.window.showInputBox({ prompt: 'Insert component name' }).then(input => {
         if (!input) return;
         editor.edit(edit => {
@@ -56,7 +56,7 @@ const embedComponent = () => editorContext((editor, selection, text, selectedTex
 });
 
 
-const extractStyle = () => editorContext((editor, selection, text, selectedText) => {
+exports.extractStyle = () => editorContext((editor, selection, text, selectedText) => {
     vscode.window.showInputBox({ prompt: 'Insert name' }).then(input => {
         if (!input) return;
         editor.edit(edit => {
@@ -75,11 +75,3 @@ const extractStyle = () => editorContext((editor, selection, text, selectedText)
         });
     });
 });
-
-
-exports.componentToFile = extractComponentToFile;
-exports.componentToFunction = extractComponentToFunction;
-
-exports.style = extractStyle;
-
-exports.embed = embedComponent;
