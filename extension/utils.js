@@ -2,21 +2,14 @@ const vscode = require('vscode');
 
 const fs = require('fs');
 const mkdirp = require('mkdirp');
-const { dirname } = require('path')
+const { dirname } = require('path')
 
 const _ = require('lodash');
-const lineColumn = require("line-column");
 
-
-const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
 
 const createFile = (name, contents, original, cb) => {
 
-    console.log('createFile');
-
-    const pathFolder = vscode.workspace.getConfiguration('extractcomponent').path
+    const pathFolder = settings.componentsFolderPath
     const path = vscode.workspace.rootPath + pathFolder + name + '/index.js'
     const pathPackage = vscode.workspace.rootPath + pathFolder + 'package.json'
 
@@ -25,8 +18,8 @@ const createFile = (name, contents, original, cb) => {
 
     readTemplate(function (template) {
         const props = ['', ''] //createProps(contents)
-
-        let newContent = template.replace(new RegExp('__COMPONENTNAME__', 'g'), capitalizeFirstLetter(_.camelCase(name)))
+        
+        let newContent = template.replace(new RegExp('__COMPONENTNAME__', 'g'), capitalizedCamelCase(name))
         newContent = newContent.replace("__CONTENTS__", contents)
         newContent = newContent.replace("__PROPS__", props[0])
 
@@ -41,12 +34,16 @@ const createFile = (name, contents, original, cb) => {
                 createPackage(pathPackage)
 
             fs.writeFile(path, newContent, () => {
-                cb(null, props[1])
+                cb(null)
             });
         });
 
     })
 
+}
+
+const capitalizedCamelCase = (e) => {
+    return _.capitalize(_.camelCase(e))
 }
 
 const createPackage = (folder) => {
@@ -80,9 +77,8 @@ const generateImport = (str) => {
 }
 
 const readTemplate = (cb) => {
-    const ext = vscode.extensions.getExtension('zucska.extractcomponent');
-    // todo add version template for reactjs and react native
-    fs.readFile(ext.extensionPath + '/assets/template.js', "utf-8", function read(err, data) {
+    //TODO Version template for reactjs and reac- native
+    fs.readFile(settings.extensionPath + '/assets/template.js', "utf-8", function read(err, data) {
         if (err) {
             throw err;
         }
@@ -92,10 +88,28 @@ const readTemplate = (cb) => {
 }
 
 
+const editorContext = (callback) => {
+
+    var editor = vscode.window.activeTextEditor;
+
+    if (editor) {
+        var selection = editor.selection;
+        var original = editor.document.getText()
+        var text = editor.document.getText(selection);
+
+        callback(editor, selection, original, text)
+    }
+
+}
+
+const settings = {
+    componentsFolderPath: vscode.workspace.getConfiguration('extractcomponent').path,
+    componentsFolderLastPath: getNameComponents(vscode.workspace.getConfiguration('extractcomponent').path),
+    extensionPath: vscode.extensions.getExtension('zucska.extractcomponent').extensionPath,
+}
+
+exports.settings = settings;
 
 exports.createFile = createFile;
-exports.readTemplate = readTemplate;
-exports.createPackage = createPackage;
-exports.generateImport = generateImport;
-exports.getNameComponents = getNameComponents;
-exports.capitalizeFirstLetter = capitalizeFirstLetter;
+exports.editorContext = editorContext;
+exports.capitalizedCamelCase = capitalizedCamelCase;

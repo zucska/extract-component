@@ -1,68 +1,36 @@
 const vscode = require('vscode');
-
-const fs = require('fs');
-const mkdirp = require('mkdirp');
-const path = require('path');
-
-const _ = require('lodash');
 const lineColumn = require("line-column");
 
-const { createFile, getNameComponents, capitalizeFirstLetter } = require('./utils')
+const { Position } = vscode;
+const { settings, editorContext, createFile, capitalizedCamelCase } = require('./utils');
 
 
-function extractComponentToFile() {
+const extractComponentToFile = () => editorContext((editor, selection, text, selectedText) => {
+    vscode.window.showInputBox({ prompt: 'Insert component name' }).then(input => {
 
-    var editor = vscode.window.activeTextEditor;
-    if (!editor) {
-        return;
-    }
+        if (!input) return;
+        const fileName = input.toLowerCase();
 
-    var selection = editor.selection;
-    var original = editor.document.getText()
-    var text = editor.document.getText(selection);
+        createFile(fileName, selectedText, text, err => {
+            if (err) return vscode.window.showInformationMessage(err);
 
-    let actEdit = vscode.window.activeTextEditor;
-    const start = lineColumn(original).fromIndex(original.indexOf('extends'))
-    let line = null
-    if (start && start.line) {
-        line = start.line - 1
-    }
+            editor.edit(edit => {
+                const componentName = capitalizedCamelCase(fileName)
+                const importString = `import ${componentName} from '@${settings.componentsFolderLastPath}/${fileName}'\n\n`
 
-    vscode.window.showInputBox({
-        prompt: 'Insert component name',
-        value: ''
-    }).then(function (e) {
-
-        if (!e || e == '') return
-        const nameFile = e.toLowerCase()
-        createFile(nameFile, text, original, function (err, resp) {
-
-            if (err) {
-                vscode.window.showInformationMessage(err);
-                return
-            }
-
-            actEdit.edit(function (edit) {
-                const name = capitalizeFirstLetter(_.camelCase(e))
-                const Position = vscode.Position
-
-                const pathFolder = vscode.workspace.getConfiguration('extractcomponent').path
-                const nameImport = getNameComponents(pathFolder)
-
-                const stringImport = `import ${name} from '@${nameImport}/${nameFile}'\n\n`
+                const start = lineColumn(text).fromIndex(text.indexOf('extends'))
+                const line = start && start.line && start.line - 1
 
                 if (line)
-                    edit.insert(new Position(line, 0), stringImport)
+                    edit.insert(new Position(line, 0), importString)
 
-                edit.replace(selection, '<' + name + ' ' + resp + ' />')
+                edit.replace(selection, `<${componentName}/>`)
             })
-
         })
     })
+})
 
-}
-
-function extractComponentToFunction() {
+const extractComponentToFunction = () => {
 
     var editor = vscode.window.activeTextEditor;
     if (!editor) {
@@ -89,17 +57,18 @@ function extractComponentToFunction() {
     }).then(function (e) {
         if (!e || e == '') return
 
-        const nameMethod = capitalizeFirstLetter(_.camelCase(e))
+        const nameMethod = capitalizedCamelCase(e)
         actEdit.edit(function (edit) {
             const Position = vscode.Position
-            const newtext = `\n\trender${nameMethod}(){\nreturn (\n ${text}\n)\n}\n\n`
+            const newtext = `\n\trender${nameMethod}(){\nreturn(\n ${text}\n) \n }\n\n`
 
             edit.replace(selection, '\t\t{ this.render' + nameMethod + '() }')
             edit.insert(new Position(rowInsert, column), newtext)
         })
     })
-
 }
+
+
 
 function embedComponent() {
 
@@ -159,7 +128,7 @@ function extractStyle() {
             let stylesText = ''
 
             if (newStyle)
-                stylesText = `\n\nconst styles = StyleSheet.create({\n ${e}:${text} \n})`
+                stylesText = `\n\nconst styles = StyleSheet.create({ \n ${e}:${text} \n}) `
             else
                 stylesText = `${e}:${text},\n`
 
