@@ -29,11 +29,11 @@
         "commands": [
             {
                 "command": "extension.extractComponentToFile",
-                "title": "Extract React Component to New File"
+                "title": "Extract React Component to a new file"
             },
             {
                 "command": "extension.extractComponentToFunction",
-                "title": "Extract React Component to Function"
+                "title": "Extract React Component to a function"
             },
             {
                 "command": "extension.extractStyle",
@@ -70,7 +70,7 @@
         },
         "configuration": {
             "type": "object",
-            "title": "Extact component configuration",
+            "title": "Extract component configuration",
             "properties": {
                 "theshukran-react-utils.path": {
                     "type": [
