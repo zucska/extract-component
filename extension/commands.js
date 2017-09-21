@@ -23,12 +23,13 @@ exports.extractComponentToFile = () => editorContext((editor, selection, text, s
                 if (line)
                     edit.insert(new Position(line, 0), importString);
 
-                edit.replace(selection, `<${componentName}/>`);
+                edit.replace(selection, `<${componentName}/>`)
+            }).then(() => {
+                vscode.commands.executeCommand('editor.action.formatDocument');
             });
         });
     });
 });
-
 
 exports.extractComponentToFunction = () => editorContext((editor, selection, text, selectedText) => {
     if (!~text.indexOf('render()')) return;
@@ -41,6 +42,9 @@ exports.extractComponentToFunction = () => editorContext((editor, selection, tex
 
             edit.insert(new Position(start.line - 1, start.col - 1), renderFunctionText);
             edit.replace(selection, `\t\t{this.render${functionName}()}`);
+            vscode.commands.executeCommand('editor.action.format')
+        }).then(() => {
+            vscode.commands.executeCommand('editor.action.formatDocument');
         });
     });
 });
@@ -62,6 +66,9 @@ exports.extractStyle = () => editorContext((editor, selection, text, selectedTex
 
             edit.replace(selection, `styles.${input}`);
             edit.insert(new Position(row, 0), stylesText);
+            vscode.commands.executeCommand('editor.action.format')
+        }).then(() => {
+            vscode.commands.executeCommand('editor.action.formatDocument');
         });
     });
 });
@@ -72,6 +79,9 @@ exports.embedComponent = () => editorContext((editor, selection, text, selectedT
         if (!input) return;
         editor.edit(edit => {
             edit.replace(selection, `<${input}>\n${selectedText}\n</${input}>`);
+            vscode.commands.executeCommand('editor.action.format');
+        }).then(() => {
+            vscode.commands.executeCommand('editor.action.formatDocument');
         });
     });
 });
