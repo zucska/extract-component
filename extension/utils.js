@@ -68,9 +68,9 @@ const editorContext = (callback) => {
 
 
 const settings = {
-    extensionPath: vscode.extensions.getExtension('zucska.extractcomponent').extensionPath,
-    componentsFolderPath: vscode.workspace.getConfiguration('extractcomponent').path,
-    componentsFolderLastPath: lastPathComponent(vscode.workspace.getConfiguration('extractcomponent').path)
+    extensionPath: vscode.extensions.getExtension('theShukran.theshukran-react-utils').extensionPath,
+    componentsFolderPath: vscode.workspace.getConfiguration('theshukran-react-utils').path,
+    componentsFolderLastPath: lastPathComponent(vscode.workspace.getConfiguration('theshukran-react-utils').path)
 };
 
 

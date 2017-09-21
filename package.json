@@ -1,9 +1,9 @@
 {
-    "name": "extractcomponent",
-    "displayName": "extract-component",
-    "description": "Extract component for react application",
+    "name": "theshukran-react-utils",
+    "displayName": "theShukran React/React Native utils",
+    "description": "React/React Native utils",
     "version": "1.0.0",
-    "publisher": "zucska",
+    "publisher": "theShukran",
     "keywords": [
         "javascript",
         "react",
@@ -17,9 +17,9 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/zucska/extract-component"
+        "url": "https://github.com/theShukran/theshukran-react-utils"
     },
-    "homepage": "https://github.com/zucska/extract-component",
+    "homepage": "https://github.com/theShukran/theshukran-react-utils",
     "activationEvents": [
         "*"
     ],
@@ -47,24 +47,24 @@
         "menus": {
             "editor/context": [
                 {
-                    "when": "resourceLangId == javascript",
+                    "when": "resourceLangId == javascript && editorHasSelection",
                     "command": "extension.extractComponentToFile",
-                    "group": "navigation"
+                    "group": "1_modification@0"
                 },
                 {
-                    "when": "resourceLangId == javascript",
+                    "when": "resourceLangId == javascript && editorHasSelection",
                     "command": "extension.extractComponentToFunction",
-                    "group": "navigation"
+                    "group": "1_modification@0"
                 },
                 {
-                    "when": "resourceLangId == javascript",
-                    "command": "extension.extractStyle",
-                    "group": "navigation"
-                },
-                {
-                    "when": "resourceLangId == javascript",
+                    "when": "resourceLangId == javascript && editorHasSelection",
                     "command": "extension.embedComponent",
-                    "group": "navigation"
+                    "group": "1_modification@1"
+                },
+                {
+                    "when": "resourceLangId == javascript && editorHasSelection",
+                    "command": "extension.extractStyle",
+                    "group": "1_modification@1"
                 }
             ]
         },
@@ -72,7 +72,7 @@
             "type": "object",
             "title": "Extact component configuration",
             "properties": {
-                "extractcomponent.path": {
+                "theshukran-react-utils.path": {
                     "type": [
                         "string",
                         "null"
