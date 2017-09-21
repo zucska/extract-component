@@ -1,16 +1,26 @@
-# VSCode > Extract react component
+# Shukran React Utils
 
-Core functionalities:
-- Extraction: extracts component to new file and embeds it in the current file. Props are automatically passed to the new component. 
+Easily refactor ReactJS/React-Native source code extracting components and styles from the VSCode menu.
 
-(Folder default src/components/NAME/index.js) >> package.json @components
-- to change the default folder, edit configuration "extractcomponent.path"
 
-- Embedding: wraps selected component in a component of choice (e.g. View, ScrollView )
+## Core functionalities:
+- Extraction: 
+    - extract component to new file
+    - extract component to function
+- Embed:
+    - Wrap element a component of choice (e.g. View, ScrollView)
+- Style: 
+    - Extract style from element to StyleSheet
 
-- Extract stylesheet inline
 
-- Extract method render
+Also creates a package.json for referencing components (e.g. `import MyComponent from '@components/my-component'`)
+
+
+## Settings:
+- `extractcomponent.path`: components destination path (relative to project) _(default: "src/components/")_
+
+
+* * *
 
 
 ![](https://github.com/zucska/extract-component/blob/master/assets/images/extract-component.gif?raw=true)
