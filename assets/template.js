@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 __IMPORT__
 
 class __COMPONENTNAME__ extends Component {
@@ -11,4 +11,4 @@ class __COMPONENTNAME__ extends Component {
     }
 }
 
-export default __COMPONENTNAME__
+export default __COMPONENTNAME__;
